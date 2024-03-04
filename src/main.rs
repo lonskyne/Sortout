@@ -1,5 +1,5 @@
 use rfd::FileDialog;
-use std::rc:Rc;
+use std::{borrow::{Borrow, BorrowMut}, rc::Rc};
 use std::cell::RefCell;
 use std::fs;
 use std::path::Path;
@@ -10,7 +10,6 @@ slint::slint! {
 
     export component App inherits Window{
         in property <string> current_folder;
-        in property <string> current_file;
 
         callback choose_folder <=> choose_folder_btn.clicked;
         callback open_folder <=> open_folder_btn.clicked;
@@ -21,8 +20,6 @@ slint::slint! {
             choose_folder_btn := Button { text: "Choose folder"; }
 
             open_folder_btn := Button { text: "Open folder"; }
-
-            Text { text: "Current file: " + current_file; }
         }
     }
 }
@@ -54,7 +51,8 @@ fn main() {
 
     let fp_copy = folder_path.clone();
     app.on_open_folder( move || {
-        let app : App = weak.upgrade().unwrap();     
+        let app : App = weak.upgrade().unwrap();
+        
         let paths = fs::read_dir(Path::new::<str>(&(*<RefCell<String> as Clone>::clone(&fp_copy).into_inner()))).unwrap();
 
         for path in paths {
