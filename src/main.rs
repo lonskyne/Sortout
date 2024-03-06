@@ -45,8 +45,8 @@ fn main() {
     let weak = app.as_weak();
 
     let file_index = Rc::new(RefCell::new(0));
-    let mut paths_vec: Rc<RefCell<Vec<Result<DirEntry, Error>>>> = Rc::new(RefCell::new(Vec::new()));
-    let max_index = 0;
+    let paths_vec: Rc<RefCell<Vec<Result<DirEntry, Error>>>> = Rc::new(RefCell::new(Vec::new()));
+    let max_index = Rc::new(RefCell::new(0));
 
 
     let mut fp_copy = folder_path.clone();
@@ -71,7 +71,8 @@ fn main() {
 
     let fp_copy = folder_path.clone();
     let mut cf_copy = current_file.clone();
-    let mut pv_copy = paths_vec.clone();
+    let pv_copy = paths_vec.clone();
+    let maxind_copy = max_index.clone();
 
     app.on_open_folder( {
         let app : App = weak.upgrade().unwrap();
@@ -93,6 +94,7 @@ fn main() {
             (*cf_copy.borrow_mut()).replace(val.clone());
             app.set_current_file(val.clone().into());
 
+            maxind_copy.replace(pv_copy.borrow().len());
             //sortirati nekad paths po datumu kreacije
         }
     });
@@ -106,7 +108,9 @@ fn main() {
         let pv_copy = paths_vec.clone();
 
         move || {
-            fi_copy.borrow_mut().replace_with(|&mut x| x + 1);
+            if *fi_copy.borrow()+1 < (*max_index.borrow()).try_into().unwrap() {
+                fi_copy.borrow_mut().replace_with(|&mut x| x + 1);
+            }
 
             let new_val = *fi_copy.borrow();
 
@@ -124,7 +128,9 @@ fn main() {
         let pv_copy = paths_vec.clone();
 
         move || {
-            fi_copy.borrow_mut().replace_with(|&mut x| x - 1);
+            if *fi_copy.borrow() > 0 {
+                fi_copy.borrow_mut().replace_with(|&mut x| x - 1);
+            }
 
             let new_val = *fi_copy.borrow();
 
