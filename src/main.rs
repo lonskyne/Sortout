@@ -1,9 +1,11 @@
 use rfd::FileDialog;
-use std::{borrow::{BorrowMut}, fs::DirEntry, rc::Rc};
+use slint::SharedString;
+use std::{borrow::BorrowMut, fs::DirEntry, ops::Deref, rc::Rc};
 use std::cell::RefCell;
 use std::fs;
 use std::path::Path;
 use std::io::Error;
+use std::ffi::OsStr;
 
 
 slint::slint! {
@@ -12,6 +14,9 @@ slint::slint! {
     export component App inherits Window{
         in property <string> current_folder;
         in property <string> current_file;
+        in property <string> current_file_type;
+        in property <string> current_file_content;
+
 
         callback choose_folder <=> choose_folder_btn.clicked;
         callback open_folder <=> open_folder_btn.clicked;
@@ -26,7 +31,13 @@ slint::slint! {
 
             open_folder_btn := Button { text: "Open folder"; }
 
-            Text { text : "Current file:" + current_file; }
+            VerticalBox {
+                Text { text : "Current file"; }
+                Text { text : "File name: " + current_file; }
+                Text { text: "File type: " + current_file_type; }
+                Text { text: "File contents: "; }
+                Text { text: current_file_content; }
+            }
 
             HorizontalBox {
                 previous_file_btn := Button { text: "<"; }
@@ -89,10 +100,15 @@ fn main() {
 
             if pv_copy.borrow().len() > 0 {
                 val = pv_copy.borrow()[0].as_ref().unwrap().file_name().into_string().unwrap();
-            }
 
-            (*cf_copy.borrow_mut()).replace(val.clone());
-            app.set_current_file(val.clone().into());
+                (*cf_copy.borrow_mut()).replace(val.clone());
+                app.set_current_file(val.clone().into());
+                
+                match(pv_copy.borrow()[0].as_ref().unwrap().path().extension()) {
+                    Some(s) => app.set_current_file_type(s.to_str().unwrap().into()),
+                    None => app.set_current_file_type(String::from("Unknown").into()),
+                };
+            }
 
             maxind_copy.replace(pv_copy.borrow().len());
             //sortirati nekad paths po datumu kreacije
@@ -110,12 +126,16 @@ fn main() {
         move || {
             if *fi_copy.borrow()+1 < (*max_index.borrow()).try_into().unwrap() {
                 fi_copy.borrow_mut().replace_with(|&mut x| x + 1);
+
+                let new_val = *fi_copy.borrow();
+
+                (*cf_copy.borrow_mut()).replace(pv_copy.borrow()[new_val as usize].as_ref().unwrap().file_name().into_string().unwrap().into());
+                app.set_current_file(pv_copy.borrow()[new_val as usize].as_ref().unwrap().file_name().into_string().unwrap().into());
+                match(pv_copy.borrow()[new_val as usize].as_ref().unwrap().path().extension()) {
+                    Some(s) => app.set_current_file_type(s.to_str().unwrap().into()),
+                    None => app.set_current_file_type(String::from("Unknown").into()),
+                };
             }
-
-            let new_val = *fi_copy.borrow();
-
-            (*cf_copy.borrow_mut()).replace(pv_copy.clone().borrow()[new_val as usize].as_ref().unwrap().file_name().into_string().unwrap().into());
-            app.set_current_file(pv_copy.clone().borrow()[new_val as usize].as_ref().unwrap().file_name().into_string().unwrap().into());
         }
     });
 
@@ -130,12 +150,16 @@ fn main() {
         move || {
             if *fi_copy.borrow() > 0 {
                 fi_copy.borrow_mut().replace_with(|&mut x| x - 1);
+
+                let new_val = *fi_copy.borrow();
+
+                (*cf_copy.borrow_mut()).replace(pv_copy.borrow()[new_val as usize].as_ref().unwrap().file_name().into_string().unwrap().into());
+                app.set_current_file(pv_copy.borrow()[new_val as usize].as_ref().unwrap().file_name().into_string().unwrap().into());
+                match(pv_copy.borrow()[new_val as usize].as_ref().unwrap().path().extension()) {
+                    Some(s) => app.set_current_file_type(s.to_str().unwrap().into()),
+                    None => app.set_current_file_type(String::from("Unknown").into()),
+                };    
             }
-
-            let new_val = *fi_copy.borrow();
-
-            (*cf_copy.borrow_mut()).replace(pv_copy.borrow()[new_val as usize].as_ref().unwrap().file_name().into_string().unwrap().into());
-            app.set_current_file(pv_copy.borrow()[new_val as usize].as_ref().unwrap().file_name().into_string().unwrap().into());
         }
     });
 
