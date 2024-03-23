@@ -1,19 +1,21 @@
 use rfd::FileDialog;
-use slint::{ComponentHandle};
+use slint::{ComponentHandle, Image};
 use std::{borrow::BorrowMut, fs::DirEntry, rc::Rc};
 use std::cell::RefCell;
 use std::fs::{self, read_to_string};
 use std::path::Path;
-use std::io::Error;slint::slint! {
-    import {Button, VerticalBox, HorizontalBox } from "std-widgets.slint";
 
-    export component App inherits Window{
+use std::io::Error;slint::slint! {
+    import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint";
+
+    export component App inherits Window {
+
         in property <string> current_folder;
         in property <string> current_file;
         in property <string> current_file_type;
 
         in property <string> current_file_content_text;
-
+        in property <image> current_file_content_image;
 
         callback choose_folder <=> choose_folder_btn.clicked;
         callback open_folder <=> open_folder_btn.clicked;
@@ -34,6 +36,7 @@ use std::io::Error;slint::slint! {
                 Text { text: "File type: " + current_file_type; }
                 Text { text: "File contents: "; }
                 Text { text: current_file_content_text;}
+                Image { source: current_file_content_image; width: 60%; height: 60%; image-rendering: pixelated;}
             }
 
             HorizontalBox {
@@ -43,6 +46,17 @@ use std::io::Error;slint::slint! {
             }
         }
     }
+}
+
+fn check_file_type(file_ext : &str) -> &'static str{
+    let text_file_extensions = ["txt", "csv", "json", "c", "cpp", "py", "rs", "html", "css"];
+    let image_file_extensions = ["png", "jpg", "jpeg"];
+
+    if text_file_extensions.contains(&file_ext) { return "text"; }
+
+    if image_file_extensions.contains(&file_ext) { return "image" };
+    
+    return "other";
 }
 
 fn set_current_file(dir_entry : &DirEntry, cf_ref : &mut Rc<RefCell<String>>, app_ref : &App) {
@@ -67,9 +81,15 @@ fn set_current_file(dir_entry : &DirEntry, cf_ref : &mut Rc<RefCell<String>>, ap
             app.set_current_file_type(String::from("Symlink").into());
         }
 
-        match file_type.as_str() {
-            "txt" => app.set_current_file_content_text(read_to_string(dir_entry.path()).unwrap_or(String::from("Text file read error!"))[0..255].into()),
-            _ => app.set_current_file_content_text(String::from("Cannot read this file.").into()),
+        
+        app.set_current_file_content_text("".into());
+        app.set_current_file_content_image(Image::default());
+
+        match check_file_type(file_type.as_str()) {
+            "text" => app.set_current_file_content_text(read_to_string(dir_entry.path()).unwrap_or(String::from("Text file read error!"))[0..255].into()),
+            "image" => app.set_current_file_content_image(Image::load_from_path(dir_entry.path().as_path()).unwrap_or(Image::load_from_path(Path::new("./resources/err_img.png")).unwrap())),
+            "other" => app.set_current_file_content_text(String::from("Cannot read this file type.").into()),
+            _ => app.set_current_file_content_text(String::from("Error when matching file types!").into())
         }
 }
 
