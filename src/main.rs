@@ -4,12 +4,12 @@ use std::{borrow::BorrowMut, fs::DirEntry, rc::Rc};
 use std::cell::RefCell;
 use std::fs::{self, read_to_string};
 use std::path::Path;
+use trash;
 
 use std::io::Error;slint::slint! {
     import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint";
 
     export component App inherits Window {
-
         in property <string> current_folder;
         in property <string> current_file;
         in property <string> current_file_type;
@@ -17,11 +17,17 @@ use std::io::Error;slint::slint! {
         in property <string> current_file_content_text;
         in property <image> current_file_content_image;
 
+        in property <string> marked_deletion_list;
+
         callback choose_folder <=> choose_folder_btn.clicked;
         callback open_folder <=> open_folder_btn.clicked;
 
         callback prev_file <=> previous_file_btn.clicked;
         callback next_file <=> next_file_btn.clicked;
+
+        callback mark_delete <=> mark_delete_btn.clicked;
+
+        callback confirm_marks <=> confirm_marks_btn.clicked;
 
         VerticalBox {
             Text { text : "Current folder: " + current_folder; }
@@ -30,6 +36,18 @@ use std::io::Error;slint::slint! {
 
             open_folder_btn := Button { text: "Open folder"; }
 
+            HorizontalBox {
+                VerticalBox {
+                    width: 10%;
+
+                    Text { text: "Marked for deletion:"; }
+
+                    Text { text: marked_deletion_list; }
+                }
+            }
+
+            confirm_marks_btn := Button { text: "Confirm marks"; }
+
             VerticalBox {
                 Text { text : "Current file"; }
                 Text { text : "File name: " + current_file; }
@@ -37,6 +55,10 @@ use std::io::Error;slint::slint! {
                 Text { text: "File contents: "; }
                 Text { text: current_file_content_text;}
                 Image { source: current_file_content_image; width: 60%; height: 60%; image-rendering: pixelated;}
+            }
+
+            HorizontalBox {
+                mark_delete_btn := Button { text: "Mark: Delete"; }
             }
 
             HorizontalBox {
@@ -52,17 +74,17 @@ fn check_file_type(file_ext : &str) -> &'static str{
     let text_file_extensions = ["txt", "csv", "json", "c", "cpp", "py", "rs", "html", "css"];
     let image_file_extensions = ["png", "jpg", "jpeg"];
 
-    if text_file_extensions.contains(&file_ext) { return "text"; }
+    if text_file_extensions.contains(&file_ext.to_lowercase().as_str()) { return "text"; }
 
-    if image_file_extensions.contains(&file_ext) { return "image" };
+    if image_file_extensions.contains(&file_ext.to_lowercase().as_str()) { return "image" };
     
     return "other";
 }
 
 fn set_current_file(dir_entry : &DirEntry, cf_ref : &mut Rc<RefCell<String>>, app_ref : &App) {
         let app = (*app_ref).clone_strong();
-        let val = dir_entry.file_name().into_string().unwrap();
 
+        let val = dir_entry.file_name().into_string().unwrap();
         cf_ref.replace(val.clone());
         app.set_current_file(val.clone().into());
 
@@ -96,6 +118,8 @@ fn set_current_file(dir_entry : &DirEntry, cf_ref : &mut Rc<RefCell<String>>, ap
 fn main() {
     let folder_path = Rc::new(RefCell::new(String::from("")));
     let current_file = Rc::new(RefCell::new(String::from("")));
+
+    let marked_deletion = Rc::new(RefCell::new(Vec::<i32>::new()));
 
     let app : App = App::new().unwrap();
     let weak = app.as_weak();
@@ -188,6 +212,62 @@ fn main() {
         }
     });
 
+
+
+    app.on_mark_delete({
+        let app : App = weak.upgrade().unwrap();
+
+        let fi_copy = file_index.clone();
+        let pv_copy = paths_vec.clone();
+
+        let mark_del_copy = marked_deletion.clone();
+
+        move || {
+            let mut mark_del_ref = mark_del_copy.try_borrow_mut().unwrap();
+
+            if !mark_del_ref.contains(&*fi_copy.borrow()) {
+                (*mark_del_ref).push(*fi_copy.borrow());
+
+                let val = pv_copy.borrow()[*fi_copy.borrow() as usize].as_ref().unwrap().file_name().into_string().unwrap();
+                let mut string = String::from(app.get_marked_deletion_list().as_str());
+
+                string.push_str(val.as_str());
+                string.push('\n');
+
+                app.set_marked_deletion_list(string.into());
+            }
+        }
+    });
+
+
+    app.on_confirm_marks({
+        let app : App = weak.upgrade().unwrap();
+        let mark_del_copy = marked_deletion.clone();
+        let pv_copy = paths_vec.clone();
+
+        move || {
+            let mark_del_ref = mark_del_copy.borrow();
+
+
+            for i in mark_del_ref.iter() {
+                let path = pv_copy.borrow()[*i as usize].as_ref().unwrap().path();
+
+                match trash::delete(path) {
+                    Ok(_e) => (),
+                    Err(e) => println!("{:?}", e),
+                };
+            }
+
+            app.set_marked_deletion_list(String::from("").into());
+            
+            let mark_del_refmut = mark_del_copy.try_borrow_mut();
+            match mark_del_refmut {
+                Ok(mut f) => { f.clear(); () },
+                Err(_) => (),
+            };
+
+        }
+    });
     
     app.run().unwrap();
 }
