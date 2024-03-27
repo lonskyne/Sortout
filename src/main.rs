@@ -19,6 +19,10 @@ use std::io::Error;slint::slint! {
 
         in property <string> marked_deletion_list;
 
+        // 
+        in property <bool> folder_chosen;
+        in property <bool> folder_opened;
+
         callback choose_folder <=> choose_folder_btn.clicked;
         callback open_folder <=> open_folder_btn.clicked;
 
@@ -34,7 +38,7 @@ use std::io::Error;slint::slint! {
 
             choose_folder_btn := Button { text: "Choose folder"; }
 
-            open_folder_btn := Button { text: "Open folder"; }
+            open_folder_btn := Button { text: "Open folder"; enabled: folder_chosen; }
 
             HorizontalBox {
                 VerticalBox {
@@ -46,7 +50,7 @@ use std::io::Error;slint::slint! {
                 }
             }
 
-            confirm_marks_btn := Button { text: "Confirm marks"; }
+            confirm_marks_btn := Button { text: "Confirm marks"; enabled: folder_opened; }
 
             VerticalBox {
                 Text { text : "Current file"; }
@@ -58,13 +62,13 @@ use std::io::Error;slint::slint! {
             }
 
             HorizontalBox {
-                mark_delete_btn := Button { text: "Mark: Delete"; }
+                mark_delete_btn := Button { text: "Mark: Delete"; enabled: folder_opened; }
             }
 
             HorizontalBox {
-                previous_file_btn := Button { text: "<"; }
+                previous_file_btn := Button { text: "<"; enabled: folder_opened; }
 
-                next_file_btn := Button { text: ">"; }
+                next_file_btn := Button { text: ">"; enabled: folder_opened; }
             }
         }
     }
@@ -115,6 +119,20 @@ fn set_current_file(dir_entry : &DirEntry, cf_ref : &mut Rc<RefCell<String>>, ap
         }
 }
 
+fn clear_app_ui(app_ref : &App) {
+    let app = (*app_ref).clone_strong();
+
+    app.set_folder_opened(false);
+    app.set_folder_chosen(false);
+
+    app.set_current_file(String::from("").into());
+    app.set_current_file_content_text(String::from("").into());
+    app.set_current_file_type(String::from("").into());
+    app.set_current_folder(String::from("").into());
+    app.set_marked_deletion_list(String::from("").into());
+    app.set_current_file_content_image(Image::default());
+}
+
 fn main() {
     let folder_path = Rc::new(RefCell::new(String::from("")));
     let current_file = Rc::new(RefCell::new(String::from("")));
@@ -128,7 +146,6 @@ fn main() {
     let paths_vec: Rc<RefCell<Vec<Result<DirEntry, Error>>>> = Rc::new(RefCell::new(Vec::new()));
     let max_index = Rc::new(RefCell::new(0));
 
-
     let mut fp_copy = folder_path.clone();
 
     app.on_choose_folder( {
@@ -141,7 +158,9 @@ fn main() {
 
             match folder { 
                 Some(f) => { (*fp_copy.borrow_mut()).replace(f.clone().into_os_string().into_string().unwrap()); 
-                                        app.set_current_folder(f.clone().into_os_string().into_string().unwrap().into()); }, 
+                                        app.set_current_folder(f.clone().into_os_string().into_string().unwrap().into()); 
+                                        app.set_folder_chosen(true);
+                                    }, 
                 None => (),
             };
         }
@@ -170,6 +189,8 @@ fn main() {
             }
 
             maxind_copy.replace(pv_copy.borrow().len());
+
+            app.set_folder_opened(true);
             //sortirati nekad paths po datumu kreacije
         }
     });
@@ -211,7 +232,6 @@ fn main() {
             }
         }
     });
-
 
 
     app.on_mark_delete({
@@ -266,6 +286,7 @@ fn main() {
                 Err(_) => (),
             };
 
+            clear_app_ui(&app);
         }
     });
     
