@@ -71,6 +71,18 @@ use std::io::Error;slint::slint! {
                 next_file_btn := Button { text: ">"; enabled: folder_opened; }
             }
         }
+
+
+        forward-focus: my-key-handler;
+
+        my-key-handler := FocusScope {
+            key-pressed(event) => {
+                if event.text == Key.LeftArrow { previous_file_btn.clicked(); }
+                if event.text == Key.RightArrow { next_file_btn.clicked(); }
+                if event.text == Key.Delete { mark_delete_btn.clicked(); }
+                accept
+            }
+        }
     }
 }
 
