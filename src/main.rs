@@ -5,9 +5,12 @@ use std::fs::{self, read_to_string};
 use std::path::Path;
 use trash;
 use std::io::Error;
+use array_init::array_init;
 
 use slint::Image;
 slint::include_modules!();
+
+const MAX_FOLDER_NUM: usize = 12;
 
 fn check_file_type(file_ext : &str) -> &'static str{
     let text_file_extensions = ["txt", "csv", "json", "c", "cpp", "py", "rs", "html", "css"];
@@ -72,7 +75,10 @@ fn main() -> Result<(), slint::PlatformError> {
     let folder_path = Rc::new(RefCell::new(String::from("")));
     let current_file = Rc::new(RefCell::new(String::from("")));
 
+    let move_folder_paths: [Rc<RefCell<String>>; MAX_FOLDER_NUM] = array_init(|_| Rc::new(RefCell::new(String::new())));
+
     let marked_deletion = Rc::new(RefCell::new(Vec::<i32>::new()));
+    let marked_move_arr: [Rc<RefCell<Vec<i32>>>; MAX_FOLDER_NUM] = array_init(|_| Rc::new(RefCell::new(vec![])));
 
     let app = App::new()?;
     let weak = app.as_weak();

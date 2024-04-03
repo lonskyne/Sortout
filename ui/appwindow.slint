@@ -1,6 +1,8 @@
 import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint";
 
     export component App inherits Window {
+        title: "Sortout";
+
         in property <string> current_folder;
         in property <string> current_file;
         in property <string> current_file_type;
@@ -8,7 +10,32 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
         in property <string> current_file_content_text;
         in property <image> current_file_content_image;
 
+        in property <string> folder1_name;
+        in property <string> folder2_name;
+        in property <string> folder3_name;
+        in property <string> folder4_name;
+        in property <string> folder5_name;
+        in property <string> folder6_name;
+        in property <string> folder7_name;
+        in property <string> folder8_name;
+        in property <string> folder9_name;
+        in property <string> folder10_name;
+        in property <string> folder11_name;
+        in property <string> folder12_name;
+
         in property <string> marked_deletion_list;
+        in property <string> marked_f1_list;
+        in property <string> marked_f2_list;
+        in property <string> marked_f3_list;
+        in property <string> marked_f4_list;
+        in property <string> marked_f5_list;
+        in property <string> marked_f6_list;
+        in property <string> marked_f7_list;
+        in property <string> marked_f8_list;
+        in property <string> marked_f9_list;
+        in property <string> marked_f10_list;
+        in property <string> marked_f11_list;
+        in property <string> marked_f12_list;
 
         in property <bool> folder_chosen;
         in property <bool> folder_opened;
@@ -31,12 +58,18 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
             open_folder_btn := Button { text: "Open folder"; enabled: folder_chosen; }
 
             HorizontalBox {
+                alignment: space-between;
+
                 VerticalBox {
-                    width: 10%;
-
+                    width: 7%;
                     Text { text: "Marked for deletion:"; }
-
                     Text { text: marked_deletion_list; }
+                }
+                VerticalBox {
+                    width: 7%;
+                    Text { text: "Marked for folder:"; }
+                    Text { text: folder1_name; }
+                    Text { text: marked_f1_list; }
                 }
             }
 
@@ -52,7 +85,21 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
             }
 
             HorizontalBox {
-                mark_delete_btn := Button { text: "Mark: Delete"; enabled: folder_opened; }
+                alignment: space-between;
+
+                mark_delete_btn := Button { text: "Delete"; enabled: folder_opened; width: 7%;}
+                mark_move_f1_btn := Button { text: "Folder 1"; width: 7%;}
+                mark_move_f2_btn := Button { text: "Folder 2"; width: 7%;}
+                mark_move_f3_btn := Button { text: "Folder 3"; width: 7%;}
+                mark_move_f4_btn := Button { text: "Folder 4"; width: 7%;}
+                mark_move_f5_btn := Button { text: "Folder 5"; width: 7%;}
+                mark_move_f6_btn := Button { text: "Folder 6"; width: 7%;}
+                mark_move_f7_btn := Button { text: "Folder 7"; width: 7%;}
+                mark_move_f8_btn := Button { text: "Folder 8"; width: 7%;}
+                mark_move_f9_btn := Button { text: "Folder 9"; width: 7%;}
+                mark_move_f10_btn := Button { text: "Folder 10"; width: 7%;}
+                mark_move_f11_btn := Button { text: "Folder 11"; width: 7%;}
+                mark_move_f12_btn := Button { text: "Folder 12"; width: 7%;}
             }
 
             HorizontalBox {
@@ -70,7 +117,20 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
                 if event.text == Key.LeftArrow { previous_file_btn.clicked(); }
                 if event.text == Key.RightArrow { next_file_btn.clicked(); }
                 if event.text == Key.Delete { mark_delete_btn.clicked(); }
+                if event.text == Key.F1 { mark_move_f1_btn.clicked(); }
+                if event.text == Key.F2 { mark_move_f2_btn.clicked(); }
+                if event.text == Key.F3 { mark_move_f3_btn.clicked(); }
+                if event.text == Key.F4 { mark_move_f4_btn.clicked(); }
+                if event.text == Key.F5 { mark_move_f5_btn.clicked(); }
+                if event.text == Key.F6 { mark_move_f6_btn.clicked(); }
+                if event.text == Key.F7 { mark_move_f7_btn.clicked(); }
+                if event.text == Key.F8 { mark_move_f8_btn.clicked(); }
+                if event.text == Key.F9 { mark_move_f9_btn.clicked(); }
+                if event.text == Key.F10 { mark_move_f10_btn.clicked(); }
+                if event.text == Key.F11 { mark_move_f11_btn.clicked(); }
+                if event.text == Key.F12 { mark_move_f12_btn.clicked(); }
+
                 accept
             }
-        }
+    }
     }

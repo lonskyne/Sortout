@@ -10,6 +10,7 @@ build = "build.rs"
 rfd = "0.14.0"
 slint = "1.4.1"
 trash = "4.1.0"
+array-init = "0.1"
 
 [build-dependencies]
 slint-build = "1.4.1"
