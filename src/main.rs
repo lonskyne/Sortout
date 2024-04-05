@@ -1,6 +1,6 @@
 use rfd::FileDialog;
 use std::{borrow::BorrowMut, fs::DirEntry, rc::Rc};
-use std::cell::RefCell;
+use std::cell::{Ref, RefCell};
 use std::fs::{self, read_to_string};
 use std::path::Path;
 use trash;
@@ -68,6 +68,18 @@ fn clear_app_ui(app_ref : &App) {
     app.set_current_file_type(String::from("").into());
     app.set_current_folder(String::from("").into());
     app.set_marked_deletion_list(String::from("").into());
+    app.set_marked_f1_list(String::from("").into());
+    app.set_marked_f2_list(String::from("").into());
+    app.set_marked_f3_list(String::from("").into());
+    app.set_marked_f4_list(String::from("").into());
+    app.set_marked_f5_list(String::from("").into());
+    app.set_marked_f6_list(String::from("").into());
+    app.set_marked_f7_list(String::from("").into());
+    app.set_marked_f8_list(String::from("").into());
+    app.set_marked_f9_list(String::from("").into());
+    app.set_marked_f10_list(String::from("").into());
+    app.set_marked_f11_list(String::from("").into());
+    app.set_marked_f12_list(String::from("").into());
     app.set_current_file_content_image(Image::default());
 }
 
@@ -79,25 +91,73 @@ fn set_sort_folder(sort_folder_path: &mut Rc<RefCell<String>>, sf_ind : i32, app
             .pick_folder();
 
         match folder { 
-            Some(f) => { sort_folder_path.replace(f.clone().into_os_string().into_string().unwrap());
-                                    match sf_ind {
-                                        0 => app.set_folder1_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
-                                        1 => app.set_folder2_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
-                                        2 => app.set_folder3_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
-                                        3 => app.set_folder4_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
-                                        4 => app.set_folder5_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
-                                        5 => app.set_folder6_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
-                                        6 => app.set_folder7_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
-                                        7 => app.set_folder8_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
-                                        8 => app.set_folder9_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
-                                        9 => app.set_folder10_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
-                                        10 => app.set_folder11_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
-                                        11 => app.set_folder12_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
-                                        _ => ()
-                                    };    
-                                }, 
+            Some(f) => { 
+                sort_folder_path.replace(f.clone().into_os_string().into_string().unwrap());
+                match sf_ind {
+                    0 => app.set_folder1_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                    1 => app.set_folder2_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                    2 => app.set_folder3_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                    3 => app.set_folder4_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                    4 => app.set_folder5_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                    5 => app.set_folder6_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                    6 => app.set_folder7_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                    7 => app.set_folder8_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                    8 => app.set_folder9_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                    9 => app.set_folder10_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                    10 => app.set_folder11_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                    11 => app.set_folder12_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                    _ => ()
+                };    
+            }, 
             None => (),
         };
+}
+
+fn mark_move(path_vec: Ref<Vec<Result<DirEntry, Error>>>,mark_move: &mut Rc<RefCell<Vec<i32>>> ,file_index: Ref<i32>,sf_ind : i32, app_ref : &App) {
+    let app = (*app_ref).clone_strong();
+
+    if !mark_move.borrow().contains(&*file_index) {
+        (*mark_move).try_borrow_mut().unwrap().push(*file_index);
+
+        let val = path_vec[*file_index as usize].as_ref().unwrap().file_name().into_string().unwrap();
+        let mut string ;
+
+        match sf_ind {
+            0 => string = String::from(app.get_marked_f1_list().as_str()),
+            1 => string = String::from(app.get_marked_f2_list().as_str()),
+            2 => string = String::from(app.get_marked_f3_list().as_str()),
+            3 => string = String::from(app.get_marked_f4_list().as_str()),
+            4 => string = String::from(app.get_marked_f5_list().as_str()),
+            5 => string = String::from(app.get_marked_f6_list().as_str()),
+            6 => string = String::from(app.get_marked_f7_list().as_str()),
+            7 => string = String::from(app.get_marked_f8_list().as_str()),
+            8 => string = String::from(app.get_marked_f9_list().as_str()),
+            9 => string = String::from(app.get_marked_f10_list().as_str()),
+            10 => string = String::from(app.get_marked_f11_list().as_str()),
+            11 => string = String::from(app.get_marked_f12_list().as_str()),
+            _ => string = String::new()
+        }
+
+        string.push_str(val.as_str());
+        string.push('\n');
+
+        match sf_ind {
+            0 => app.set_marked_f1_list(string.into()),
+            1 => app.set_marked_f2_list(string.into()),
+            2 => app.set_marked_f3_list(string.into()),
+            3 => app.set_marked_f4_list(string.into()),
+            4 => app.set_marked_f5_list(string.into()),
+            5 => app.set_marked_f6_list(string.into()),
+            6 => app.set_marked_f7_list(string.into()),
+            7 => app.set_marked_f8_list(string.into()),
+            8 => app.set_marked_f9_list(string.into()),
+            9 => app.set_marked_f10_list(string.into()),
+            10 => app.set_marked_f11_list(string.into()),
+            11 => app.set_marked_f12_list(string.into()),
+            _ => ()
+        }
+        
+    }
 }
 
 fn main() -> Result<(), slint::PlatformError> {
@@ -342,6 +402,28 @@ fn main() -> Result<(), slint::PlatformError> {
         let mfp_copy = move_folder_paths.clone();
 
         move || { set_sort_folder(mfp_copy[11].clone().borrow_mut(), 11, &app); }
+    });
+
+    app.on_mark_move_f1({
+        let app : App = weak.upgrade().unwrap();
+        let fi_copy = file_index.clone();
+        let pv_copy = paths_vec.clone();
+        let mut mark_move_copy = marked_move_arr[0].clone();
+
+        move || {
+            mark_move(pv_copy.borrow(), mark_move_copy.borrow_mut(), fi_copy.borrow(), 0, &app)
+        }
+    });
+
+    app.on_mark_move_f2({
+        let app : App = weak.upgrade().unwrap();
+        let fi_copy = file_index.clone();
+        let pv_copy = paths_vec.clone();
+        let mut mark_move_copy = marked_move_arr[1].clone();
+
+        move || {
+            mark_move(pv_copy.borrow(), mark_move_copy.borrow_mut(), fi_copy.borrow(), 1, &app)
+        }
     });
     
     

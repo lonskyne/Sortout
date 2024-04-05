@@ -47,6 +47,18 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
         callback next_file <=> next_file_btn.clicked;
 
         callback mark_delete <=> mark_delete_btn.clicked;
+        callback mark_move_f1 <=> mark_move_f1_btn.clicked;
+        callback mark_move_f2 <=> mark_move_f2_btn.clicked;
+        callback mark_move_f3 <=> mark_move_f3_btn.clicked;
+        callback mark_move_f4 <=> mark_move_f4_btn.clicked;
+        callback mark_move_f5 <=> mark_move_f5_btn.clicked;
+        callback mark_move_f6 <=> mark_move_f6_btn.clicked;
+        callback mark_move_f7 <=> mark_move_f7_btn.clicked;
+        callback mark_move_f8 <=> mark_move_f8_btn.clicked;
+        callback mark_move_f9 <=> mark_move_f9_btn.clicked;
+        callback mark_move_f10 <=> mark_move_f10_btn.clicked;
+        callback mark_move_f11 <=> mark_move_f11_btn.clicked;
+        callback mark_move_f12 <=> mark_move_f12_btn.clicked;
 
         callback confirm_marks <=> confirm_marks_btn.clicked;
 
@@ -73,6 +85,16 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
 
             open_folder_btn := Button { text: "Open folder"; enabled: folder_chosen; }
 
+
+            VerticalBox {
+                Text { text : "Current file"; }
+                Text { text : "File name: " + current_file; }
+                Text { text: "File type: " + current_file_type; }
+                Text { text: "File contents: "; }
+                Text { text: current_file_content_text;}
+                Image { source: current_file_content_image; width: 60%; height: 60%; image-rendering: pixelated;}
+            }
+
             HorizontalBox {
                 alignment: space-between;
                 
@@ -91,7 +113,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
 
                     VerticalBox {
                         Text { text: "Marked for " + folder1_name + ":"; wrap: word-wrap;}
-                        Text { text: marked_deletion_list; wrap: word-wrap; }
+                        Text { text: marked_f1_list; wrap: word-wrap; }
                         choose_sort_folder1_btn := Button { text: "Choose folder 1"; }
                     }
                 }
@@ -101,7 +123,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
 
                     VerticalBox {
                         Text { text: "Marked for " + folder2_name + ":"; wrap: word-wrap;}
-                        Text { text: marked_deletion_list; wrap: word-wrap; }
+                        Text { text: marked_f2_list; wrap: word-wrap; }
                         choose_sort_folder2_btn := Button { text: "Choose folder 2"; }
                     }
                 }
@@ -111,7 +133,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
 
                     VerticalBox {
                         Text { text: "Marked for " + folder3_name + ":"; wrap: word-wrap;}
-                        Text { text: marked_deletion_list; wrap: word-wrap; }
+                        Text { text: marked_f3_list; wrap: word-wrap; }
                         choose_sort_folder3_btn := Button { text: "Choose folder 3"; }
                     }
                 }
@@ -121,7 +143,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
 
                     VerticalBox {
                         Text { text: "Marked for " + folder4_name + ":"; wrap: word-wrap;}
-                        Text { text: marked_deletion_list; wrap: word-wrap; }
+                        Text { text: marked_f4_list; wrap: word-wrap; }
                         choose_sort_folder4_btn := Button { text: "Choose folder 4"; }
                     }
                 }
@@ -131,7 +153,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
 
                     VerticalBox {
                         Text { text: "Marked for " + folder5_name + ":"; wrap: word-wrap;}
-                        Text { text: marked_deletion_list; wrap: word-wrap; }
+                        Text { text: marked_f5_list; wrap: word-wrap; }
                         choose_sort_folder5_btn := Button { text: "Choose folder 5"; }
                     }
                 }
@@ -141,7 +163,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
 
                     VerticalBox {
                         Text { text: "Marked for " + folder6_name + ":"; wrap: word-wrap;}
-                        Text { text: marked_deletion_list; wrap: word-wrap; }
+                        Text { text: marked_f6_list; wrap: word-wrap; }
                         choose_sort_folder6_btn := Button { text: "Choose folder 6"; }
                     }
                 }
@@ -151,7 +173,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
 
                     VerticalBox {
                         Text { text: "Marked for " + folder7_name + ":"; wrap: word-wrap;}
-                        Text { text: marked_deletion_list; wrap: word-wrap; }
+                        Text { text: marked_f7_list; wrap: word-wrap; }
                         choose_sort_folder7_btn := Button { text: "Choose folder 7"; }
                     }
                 }
@@ -161,7 +183,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
 
                     VerticalBox {
                         Text { text: "Marked for " + folder8_name + ":"; wrap: word-wrap;}
-                        Text { text: marked_deletion_list; wrap: word-wrap; }
+                        Text { text: marked_f8_list; wrap: word-wrap; }
                         choose_sort_folder8_btn := Button { text: "Choose folder 8"; }
                     }
                 }
@@ -171,7 +193,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
 
                     VerticalBox {
                         Text { text: "Marked for " + folder9_name + ":"; wrap: word-wrap;}
-                        Text { text: marked_deletion_list; wrap: word-wrap; }
+                        Text { text: marked_f9_list; wrap: word-wrap; }
                         choose_sort_folder9_btn := Button { text: "Choose folder 9"; }
                     }
                 }
@@ -181,7 +203,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
 
                     VerticalBox {
                         Text { text: "Marked for " + folder10_name + ":"; wrap: word-wrap;}
-                        Text { text: marked_deletion_list; wrap: word-wrap; }
+                        Text { text: marked_f10_list; wrap: word-wrap; }
                         choose_sort_folder10_btn := Button { text: "Choose folder 10"; }
                     }
                 }
@@ -191,7 +213,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
 
                     VerticalBox {
                         Text { text: "Marked for " + folder11_name + ":"; wrap: word-wrap;}
-                        Text { text: marked_deletion_list; wrap: word-wrap; }
+                        Text { text: marked_f11_list; wrap: word-wrap; }
                         choose_sort_folder11_btn := Button { text: "Choose folder 11"; }
                     }
                 }
@@ -201,40 +223,31 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
 
                     VerticalBox {
                         Text { text: "Marked for " + folder12_name + ":"; wrap: word-wrap;}
-                        Text { text: marked_deletion_list; wrap: word-wrap; }
+                        Text { text: marked_f12_list; wrap: word-wrap; }
                         choose_sort_folder12_btn := Button { text: "Choose folder 12"; }
                     }
                 }
-            }
-
-            confirm_marks_btn := Button { text: "Confirm marks"; enabled: folder_opened; }
-
-            VerticalBox {
-                Text { text : "Current file"; }
-                Text { text : "File name: " + current_file; }
-                Text { text: "File type: " + current_file_type; }
-                Text { text: "File contents: "; }
-                Text { text: current_file_content_text;}
-                Image { source: current_file_content_image; width: 60%; height: 60%; image-rendering: pixelated;}
             }
 
             HorizontalBox {
                 alignment: space-between;
 
                 mark_delete_btn := Button { text: "Delete"; enabled: folder_opened; width: 7%;}
-                mark_move_f1_btn := Button { text: "Folder 1"; enabled: folder_opened; width: 7%;}
-                mark_move_f2_btn := Button { text: "Folder 2"; enabled: folder_opened; width: 7%;}
-                mark_move_f3_btn := Button { text: "Folder 3"; enabled: folder_opened; width: 7%;}
-                mark_move_f4_btn := Button { text: "Folder 4"; enabled: folder_opened; width: 7%;}
-                mark_move_f5_btn := Button { text: "Folder 5"; enabled: folder_opened; width: 7%;}
-                mark_move_f6_btn := Button { text: "Folder 6"; enabled: folder_opened; width: 7%;}
-                mark_move_f7_btn := Button { text: "Folder 7"; enabled: folder_opened; width: 7%;}
-                mark_move_f8_btn := Button { text: "Folder 8"; enabled: folder_opened; width: 7%;}
-                mark_move_f9_btn := Button { text: "Folder 9"; enabled: folder_opened; width: 7%;}
-                mark_move_f10_btn := Button { text: "Folder 10"; enabled: folder_opened; width: 7%;}
-                mark_move_f11_btn := Button { text: "Folder 11"; enabled: folder_opened; width: 7%;}
-                mark_move_f12_btn := Button { text: "Folder 12"; enabled: folder_opened; width: 7%;}
+                mark_move_f1_btn := Button { text: "Folder 1"; enabled: folder_opened && folder1_name != ""; width: 7%;}
+                mark_move_f2_btn := Button { text: "Folder 2"; enabled: folder_opened && folder2_name != ""; width: 7%;}
+                mark_move_f3_btn := Button { text: "Folder 3"; enabled: folder_opened && folder3_name != ""; width: 7%;}
+                mark_move_f4_btn := Button { text: "Folder 4"; enabled: folder_opened && folder4_name != ""; width: 7%;}
+                mark_move_f5_btn := Button { text: "Folder 5"; enabled: folder_opened && folder5_name != ""; width: 7%;}
+                mark_move_f6_btn := Button { text: "Folder 6"; enabled: folder_opened && folder6_name != ""; width: 7%;}
+                mark_move_f7_btn := Button { text: "Folder 7"; enabled: folder_opened && folder7_name != ""; width: 7%;}
+                mark_move_f8_btn := Button { text: "Folder 8"; enabled: folder_opened && folder8_name != ""; width: 7%;}
+                mark_move_f9_btn := Button { text: "Folder 9"; enabled: folder_opened && folder9_name != ""; width: 7%;}
+                mark_move_f10_btn := Button { text: "Folder 10"; enabled: folder_opened && folder10_name != ""; width: 7%;}
+                mark_move_f11_btn := Button { text: "Folder 11"; enabled: folder_opened && folder11_name != ""; width: 7%;}
+                mark_move_f12_btn := Button { text: "Folder 12"; enabled: folder_opened && folder12_name != ""; width: 7%;}
             }
+
+            confirm_marks_btn := Button { text: "Confirm marks"; enabled: folder_opened; }
 
             HorizontalBox {
                 previous_file_btn := Button { text: "<"; enabled: folder_opened; }
