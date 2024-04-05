@@ -71,11 +71,40 @@ fn clear_app_ui(app_ref : &App) {
     app.set_current_file_content_image(Image::default());
 }
 
+fn set_sort_folder(sort_folder_path: &mut Rc<RefCell<String>>, sf_ind : i32, app_ref : &App) {
+    let app = (*app_ref).clone_strong();
+
+        let folder = FileDialog::new()
+            .set_directory("/")
+            .pick_folder();
+
+        match folder { 
+            Some(f) => { sort_folder_path.replace(f.clone().into_os_string().into_string().unwrap());
+                                    match sf_ind {
+                                        0 => app.set_folder1_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                                        1 => app.set_folder2_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                                        2 => app.set_folder3_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                                        3 => app.set_folder4_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                                        4 => app.set_folder5_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                                        5 => app.set_folder6_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                                        6 => app.set_folder7_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                                        7 => app.set_folder8_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                                        8 => app.set_folder9_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                                        9 => app.set_folder10_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                                        10 => app.set_folder11_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                                        11 => app.set_folder12_name(f.clone().file_name().unwrap().to_str().unwrap().into()),
+                                        _ => ()
+                                    };    
+                                }, 
+            None => (),
+        };
+}
+
 fn main() -> Result<(), slint::PlatformError> {
     let folder_path = Rc::new(RefCell::new(String::from("")));
     let current_file = Rc::new(RefCell::new(String::from("")));
 
-    let move_folder_paths: [Rc<RefCell<String>>; MAX_FOLDER_NUM] = array_init(|_| Rc::new(RefCell::new(String::new())));
+    let move_folder_paths: Rc<[Rc<RefCell<String>>; MAX_FOLDER_NUM]> = Rc::new(array_init(|_| Rc::new(RefCell::new(String::new()))));
 
     let marked_deletion = Rc::new(RefCell::new(Vec::<i32>::new()));
     let marked_move_arr: [Rc<RefCell<Vec<i32>>>; MAX_FOLDER_NUM] = array_init(|_| Rc::new(RefCell::new(vec![])));
@@ -230,6 +259,91 @@ fn main() -> Result<(), slint::PlatformError> {
             clear_app_ui(&app);
         }
     });
+
+    app.on_choose_sort_folder1({
+        let app = weak.upgrade().unwrap();
+        let mfp_copy = move_folder_paths.clone();
+
+        move || { set_sort_folder(mfp_copy[0].clone().borrow_mut(), 0, &app); }
+    });
+
+    app.on_choose_sort_folder2({
+        let app = weak.upgrade().unwrap();
+        let mfp_copy = move_folder_paths.clone();
+
+        move || { set_sort_folder(mfp_copy[1].clone().borrow_mut(), 1, &app); }
+    });
+
+    app.on_choose_sort_folder3({
+        let app = weak.upgrade().unwrap();
+        let mfp_copy = move_folder_paths.clone();
+
+        move || { set_sort_folder(mfp_copy[2].clone().borrow_mut(), 2, &app); }
+    });
+
+    app.on_choose_sort_folder4({
+        let app = weak.upgrade().unwrap();
+        let mfp_copy = move_folder_paths.clone();
+
+        move || { set_sort_folder(mfp_copy[3].clone().borrow_mut(), 3, &app); }
+    });
+
+    app.on_choose_sort_folder5({
+        let app = weak.upgrade().unwrap();
+        let mfp_copy = move_folder_paths.clone();
+
+        move || { set_sort_folder(mfp_copy[4].clone().borrow_mut(), 4, &app); }
+    });
+
+    app.on_choose_sort_folder6({
+        let app = weak.upgrade().unwrap();
+        let mfp_copy = move_folder_paths.clone();
+
+        move || { set_sort_folder(mfp_copy[5].clone().borrow_mut(), 5, &app); }
+    });
+
+    app.on_choose_sort_folder7({
+        let app = weak.upgrade().unwrap();
+        let mfp_copy = move_folder_paths.clone();
+
+        move || { set_sort_folder(mfp_copy[6].clone().borrow_mut(), 6, &app); }
+    });
+
+    app.on_choose_sort_folder8({
+        let app = weak.upgrade().unwrap();
+        let mfp_copy = move_folder_paths.clone();
+
+        move || { set_sort_folder(mfp_copy[7].clone().borrow_mut(), 7, &app); }
+    });
+
+    app.on_choose_sort_folder9({
+        let app = weak.upgrade().unwrap();
+        let mfp_copy = move_folder_paths.clone();
+
+        move || { set_sort_folder(mfp_copy[8].clone().borrow_mut(), 8, &app); }
+    });
+
+    app.on_choose_sort_folder10({
+        let app = weak.upgrade().unwrap();
+        let mfp_copy = move_folder_paths.clone();
+
+        move || { set_sort_folder(mfp_copy[9].clone().borrow_mut(), 9, &app); }
+    });
+
+    app.on_choose_sort_folder11({
+        let app = weak.upgrade().unwrap();
+        let mfp_copy = move_folder_paths.clone();
+
+        move || { set_sort_folder(mfp_copy[10].clone().borrow_mut(), 10, &app); }
+    });
+
+    app.on_choose_sort_folder12({
+        let app = weak.upgrade().unwrap();
+        let mfp_copy = move_folder_paths.clone();
+
+        move || { set_sort_folder(mfp_copy[11].clone().borrow_mut(), 11, &app); }
+    });
+    
     
     app.run()
 }
