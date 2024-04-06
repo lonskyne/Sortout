@@ -1,4 +1,4 @@
-import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint";
+import {Button, VerticalBox, HorizontalBox, ScrollView, Palette } from "std-widgets.slint";
 
     export component App inherits Window {
         title: "Sortout";
@@ -40,7 +40,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
         in property <bool> folder_chosen;
         in property <bool> folder_opened;
 
-        out property <color> default_color: white;
+        out property <color> default_color: Palette.foreground;
         out property <color> del_color: #c02222;
         out property <color> f1_color: #b3780a;
         out property <color> f2_color: #5fa50f;
@@ -276,21 +276,21 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
 
         my-key-handler := FocusScope {
             key-pressed(event) => {
-                if event.text == Key.LeftArrow { previous_file_btn.clicked(); }
-                if event.text == Key.RightArrow { next_file_btn.clicked(); }
-                if event.text == Key.Delete { mark_delete_btn.clicked(); }
-                if event.text == Key.F1 { mark_move_f1_btn.clicked(); }
-                if event.text == Key.F2 { mark_move_f2_btn.clicked(); }
-                if event.text == Key.F3 { mark_move_f3_btn.clicked(); }
-                if event.text == Key.F4 { mark_move_f4_btn.clicked(); }
-                if event.text == Key.F5 { mark_move_f5_btn.clicked(); }
-                if event.text == Key.F6 { mark_move_f6_btn.clicked(); }
-                if event.text == Key.F7 { mark_move_f7_btn.clicked(); }
-                if event.text == Key.F8 { mark_move_f8_btn.clicked(); }
-                if event.text == Key.F9 { mark_move_f9_btn.clicked(); }
-                if event.text == Key.F10 { mark_move_f10_btn.clicked(); }
-                if event.text == Key.F11 { mark_move_f11_btn.clicked(); }
-                if event.text == Key.F12 { mark_move_f12_btn.clicked(); }
+                if event.text == Key.LeftArrow {  if previous_file_btn.enabled { previous_file_btn.clicked(); } }
+                if event.text == Key.RightArrow { if next_file_btn.enabled { next_file_btn.clicked(); } }
+                if event.text == Key.Delete { if mark_delete_btn.enabled { mark_delete_btn.clicked(); } }
+                if event.text == Key.F1 { if mark_move_f1_btn.enabled {mark_move_f1_btn.clicked(); } }
+                if event.text == Key.F2 { if mark_move_f2_btn.enabled { mark_move_f2_btn.clicked(); } }
+                if event.text == Key.F3 { if mark_move_f3_btn.enabled { mark_move_f3_btn.clicked(); } }
+                if event.text == Key.F4 { if mark_move_f4_btn.enabled { mark_move_f4_btn.clicked(); } }
+                if event.text == Key.F5 { if mark_move_f5_btn.enabled { mark_move_f5_btn.clicked(); } }
+                if event.text == Key.F6 { if mark_move_f6_btn.enabled { mark_move_f6_btn.clicked(); } }
+                if event.text == Key.F7 { if mark_move_f7_btn.enabled { mark_move_f7_btn.clicked(); } }
+                if event.text == Key.F8 { if mark_move_f8_btn.enabled { mark_move_f8_btn.clicked(); } }
+                if event.text == Key.F9 { if mark_move_f9_btn.enabled { mark_move_f9_btn.clicked(); } }
+                if event.text == Key.F10 { if mark_move_f10_btn.enabled { mark_move_f10_btn.clicked(); } }
+                if event.text == Key.F11 { if mark_move_f11_btn.enabled { mark_move_f11_btn.clicked(); } }
+                if event.text == Key.F12 { if mark_move_f12_btn.enabled { mark_move_f12_btn.clicked(); } }
 
                 accept
             }
