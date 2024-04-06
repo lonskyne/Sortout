@@ -1,8 +1,8 @@
 use rfd::FileDialog;
 use std::{borrow::BorrowMut, fs::DirEntry, rc::Rc};
 use std::cell::{Ref, RefCell};
-use std::fs::{self, read_to_string};
-use std::path::Path;
+use std::fs::{self, read_to_string, rename};
+use std::path::{Path, PathBuf};
 use trash;
 use std::io::Error;
 use array_init::array_init;
@@ -160,6 +160,17 @@ fn mark_move(path_vec: Ref<Vec<Result<DirEntry, Error>>>,mark_move: &mut Rc<RefC
     }
 }
 
+fn move_to_folder(mark_f_ref: Ref<Vec<i32>>, pv_copy: Ref<Vec<Result<DirEntry, Error>>>, folder_path: Ref<String>) {
+    for i in mark_f_ref.iter() {
+        let path = pv_copy[*i as usize].as_ref().unwrap().path();
+
+        match rename(path.clone(), Path::new(Path::new::<str>(&((String::from(folder_path.as_str()) + "/" + path.file_name().unwrap().to_str().unwrap()))))) {                    
+            Ok(_a) => (),
+            Err(e) => { print!("{:?}", e); }
+        }
+    }
+}
+
 fn main() -> Result<(), slint::PlatformError> {
     let folder_path = Rc::new(RefCell::new(String::from("")));
     let current_file = Rc::new(RefCell::new(String::from("")));
@@ -292,12 +303,39 @@ fn main() -> Result<(), slint::PlatformError> {
 
     app.on_confirm_marks({
         let app : App = weak.upgrade().unwrap();
+
         let mark_del_copy = marked_deletion.clone();
+        let mark_f1_copy = marked_move_arr[0].clone();
+        let mark_f2_copy = marked_move_arr[1].clone();
+        let mark_f3_copy = marked_move_arr[2].clone();
+        let mark_f4_copy = marked_move_arr[3].clone();
+        let mark_f5_copy = marked_move_arr[4].clone();
+        let mark_f6_copy = marked_move_arr[5].clone();
+        let mark_f7_copy = marked_move_arr[6].clone();
+        let mark_f8_copy = marked_move_arr[7].clone();
+        let mark_f9_copy = marked_move_arr[8].clone();
+        let mark_f10_copy = marked_move_arr[9].clone();
+        let mark_f11_copy = marked_move_arr[10].clone();
+        let mark_f12_copy = marked_move_arr[11].clone();
+
+        let folder1_path_copy = move_folder_paths[0].clone();
+        let folder2_path_copy = move_folder_paths[1].clone();
+        let folder3_path_copy = move_folder_paths[2].clone();
+        let folder4_path_copy = move_folder_paths[3].clone();
+        let folder5_path_copy = move_folder_paths[4].clone();
+        let folder6_path_copy = move_folder_paths[5].clone();
+        let folder7_path_copy = move_folder_paths[6].clone();
+        let folder8_path_copy = move_folder_paths[7].clone();
+        let folder9_path_copy = move_folder_paths[8].clone();
+        let folder10_path_copy = move_folder_paths[9].clone();
+        let folder11_path_copy = move_folder_paths[10].clone();
+        let folder12_path_copy = move_folder_paths[11].clone();
+
+
         let pv_copy = paths_vec.clone();
 
         move || {
             let mark_del_ref = mark_del_copy.borrow();
-
 
             for i in mark_del_ref.iter() {
                 let path = pv_copy.borrow()[*i as usize].as_ref().unwrap().path();
@@ -308,8 +346,19 @@ fn main() -> Result<(), slint::PlatformError> {
                 };
             }
 
-            app.set_marked_deletion_list(String::from("").into());
-            
+            move_to_folder(mark_f1_copy.borrow(), pv_copy.borrow(), folder1_path_copy.borrow());
+            move_to_folder(mark_f2_copy.borrow(), pv_copy.borrow(), folder2_path_copy.borrow());
+            move_to_folder(mark_f3_copy.borrow(), pv_copy.borrow(), folder3_path_copy.borrow());
+            move_to_folder(mark_f4_copy.borrow(), pv_copy.borrow(), folder4_path_copy.borrow());
+            move_to_folder(mark_f5_copy.borrow(), pv_copy.borrow(), folder5_path_copy.borrow());
+            move_to_folder(mark_f6_copy.borrow(), pv_copy.borrow(), folder6_path_copy.borrow());
+            move_to_folder(mark_f7_copy.borrow(), pv_copy.borrow(), folder7_path_copy.borrow());
+            move_to_folder(mark_f8_copy.borrow(), pv_copy.borrow(), folder8_path_copy.borrow());
+            move_to_folder(mark_f9_copy.borrow(), pv_copy.borrow(), folder9_path_copy.borrow());
+            move_to_folder(mark_f10_copy.borrow(), pv_copy.borrow(), folder10_path_copy.borrow());
+            move_to_folder(mark_f11_copy.borrow(), pv_copy.borrow(), folder11_path_copy.borrow());
+            move_to_folder(mark_f12_copy.borrow(), pv_copy.borrow(), folder12_path_copy.borrow());
+
             let mark_del_refmut = mark_del_copy.try_borrow_mut();
             match mark_del_refmut {
                 Ok(mut f) => { f.clear(); () },
