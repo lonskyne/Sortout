@@ -40,6 +40,23 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
         in property <bool> folder_chosen;
         in property <bool> folder_opened;
 
+        out property <color> default_color: white;
+        out property <color> del_color: #c02222;
+        out property <color> f1_color: #b3780a;
+        out property <color> f2_color: #5fa50f;
+        out property <color> f3_color: #119623;
+        out property <color> f4_color: #0fa1a1;
+        out property <color> f5_color: #2140a5;
+        out property <color> f6_color: #481ab3;
+        out property <color> f7_color: #b91db9;
+        out property <color> f8_color: #b45ca9;
+        out property <color> f9_color: #8d9187;
+        out property <color> f10_color: #292929;
+        out property <color> f11_color: #aeb119;
+        out property <color> f12_color: #4a3258;
+
+        in property <color> cur_color: default_color;
+
         callback choose_folder <=> choose_folder_btn.clicked;
         callback open_folder <=> open_folder_btn.clicked;
 
@@ -76,8 +93,6 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
         callback choose_sort_folder12 <=> choose-sort-folder12-btn.clicked;
 
 
-
-
         VerticalBox {
             Text { text : "Current folder: " + current_folder; }
 
@@ -87,11 +102,11 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
 
 
             VerticalBox {
-                Text { text : "Current file"; }
-                Text { text : "File name: " + current_file; }
-                Text { text: "File type: " + current_file_type; }
-                Text { text: "File contents: "; }
-                Text { text: current_file_content_text;}
+                Text { text : "Current file"; color: cur_color; }
+                Text { text : "File name: " + current_file; color: cur_color;}
+                Text { text: "File type: " + current_file_type; color: cur_color; }
+                Text { text: "File contents: "; color: cur_color; }
+                Text { text: current_file_content_text; color: cur_color; }
                 Image { source: current_file_content_image; width: 60%; height: 60%; image-rendering: pixelated;}
             }
 
@@ -100,7 +115,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
                 
                 Rectangle { 
                     width: 7%;
-                    background: #c02222;
+                    background: del_color;
 
                     VerticalBox {
                         Text { text: "Marked for deletion:"; }
@@ -109,7 +124,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
                 }
                 Rectangle {
                     width: 7%;
-                    background: #b3780a;
+                    background: f1_color;
 
                     VerticalBox {
                         Text { text: "Marked for " + folder1_name + ":"; wrap: word-wrap;}
@@ -119,7 +134,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
                 }
                 Rectangle {
                     width: 7%;
-                    background: #5fa50f;
+                    background: f2_color;
 
                     VerticalBox {
                         Text { text: "Marked for " + folder2_name + ":"; wrap: word-wrap;}
@@ -129,7 +144,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
                 }
                 Rectangle {
                     width: 7%;
-                    background: #119623;
+                    background: f3_color;
 
                     VerticalBox {
                         Text { text: "Marked for " + folder3_name + ":"; wrap: word-wrap;}
@@ -139,7 +154,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
                 }
                 Rectangle {
                     width: 7%;
-                    background: #0fa1a1;
+                    background: f4_color;
 
                     VerticalBox {
                         Text { text: "Marked for " + folder4_name + ":"; wrap: word-wrap;}
@@ -149,7 +164,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
                 }
                 Rectangle {
                     width: 7%;
-                    background: #2140a5;
+                    background: f5_color;
 
                     VerticalBox {
                         Text { text: "Marked for " + folder5_name + ":"; wrap: word-wrap;}
@@ -159,7 +174,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
                 }
                 Rectangle {
                     width: 7%;
-                    background: #481ab3;
+                    background: f6_color;
 
                     VerticalBox {
                         Text { text: "Marked for " + folder6_name + ":"; wrap: word-wrap;}
@@ -169,7 +184,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
                 }
                 Rectangle {
                     width: 7%;
-                    background: #b91db9;
+                    background: f7_color;
 
                     VerticalBox {
                         Text { text: "Marked for " + folder7_name + ":"; wrap: word-wrap;}
@@ -179,7 +194,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
                 }
                 Rectangle {
                     width: 7%;
-                    background: #b45ca9;
+                    background: f8_color;
 
                     VerticalBox {
                         Text { text: "Marked for " + folder8_name + ":"; wrap: word-wrap;}
@@ -189,7 +204,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
                 }
                 Rectangle {
                     width: 7%;
-                    background: #8d9187;
+                    background: f9_color;
 
                     VerticalBox {
                         Text { text: "Marked for " + folder9_name + ":"; wrap: word-wrap;}
@@ -199,7 +214,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
                 }
                 Rectangle {
                     width: 7%;
-                    background: #292929;
+                    background: f10_color;
 
                     VerticalBox {
                         Text { text: "Marked for " + folder10_name + ":"; wrap: word-wrap;}
@@ -209,7 +224,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
                 }
                 Rectangle {
                     width: 7%;
-                    background: #aeb119;
+                    background: f11_color;
 
                     VerticalBox {
                         Text { text: "Marked for " + folder11_name + ":"; wrap: word-wrap;}
@@ -219,7 +234,7 @@ import {Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint
                 }
                 Rectangle {
                     width: 7%;
-                    background: #4a3258;
+                    background: f12_color;
 
                     VerticalBox {
                         Text { text: "Marked for " + folder12_name + ":"; wrap: word-wrap;}

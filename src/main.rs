@@ -23,6 +23,38 @@ fn check_file_type(file_ext : &str) -> &'static str{
     return "other";
 }
 
+fn set_current_color(app_ref : &App) {
+    let app = (*app_ref).clone_strong();
+
+    if app.get_marked_deletion_list().contains(app.get_current_file().as_str()) {
+        app.set_cur_color(app.get_del_color()); }
+    else if app.get_marked_f1_list().contains(app.get_current_file().as_str()) {
+        app.set_cur_color(app.get_f1_color()); }
+    else if app.get_marked_f2_list().contains(app.get_current_file().as_str()) {
+        app.set_cur_color(app.get_f2_color()); }
+    else if app.get_marked_f3_list().contains(app.get_current_file().as_str()) {
+        app.set_cur_color(app.get_f3_color()); }
+    else if app.get_marked_f4_list().contains(app.get_current_file().as_str()) {
+        app.set_cur_color(app.get_f4_color()); }
+    else if app.get_marked_f5_list().contains(app.get_current_file().as_str()) {
+        app.set_cur_color(app.get_f5_color()); }
+    else if app.get_marked_f6_list().contains(app.get_current_file().as_str()) {
+        app.set_cur_color(app.get_f6_color()); }
+    else if app.get_marked_f7_list().contains(app.get_current_file().as_str()) {
+        app.set_cur_color(app.get_f7_color()); }
+    else if app.get_marked_f8_list().contains(app.get_current_file().as_str()) {
+        app.set_cur_color(app.get_f8_color()); }
+    else if app.get_marked_f9_list().contains(app.get_current_file().as_str()) {
+        app.set_cur_color(app.get_f9_color()); }
+    else if app.get_marked_f10_list().contains(app.get_current_file().as_str()) {
+        app.set_cur_color(app.get_f10_color()); }
+    else if app.get_marked_f11_list().contains(app.get_current_file().as_str()) {
+        app.set_cur_color(app.get_f11_color()); }
+    else if app.get_marked_f12_list().contains(app.get_current_file().as_str()) {
+        app.set_cur_color(app.get_f12_color()); }
+    else { app.set_cur_color(app.get_default_color()); }
+}
+
 fn set_current_file(dir_entry : &DirEntry, cf_ref : &mut Rc<RefCell<String>>, app_ref : &App) {
         let app = (*app_ref).clone_strong();
 
@@ -44,7 +76,6 @@ fn set_current_file(dir_entry : &DirEntry, cf_ref : &mut Rc<RefCell<String>>, ap
         if dir_entry.file_type().unwrap().is_symlink() {
             app.set_current_file_type(String::from("Symlink").into());
         }
-
         
         app.set_current_file_content_text("".into());
         app.set_current_file_content_image(Image::default());
@@ -55,6 +86,10 @@ fn set_current_file(dir_entry : &DirEntry, cf_ref : &mut Rc<RefCell<String>>, ap
             "other" => app.set_current_file_content_text(String::from("Cannot read this file type.").into()),
             _ => app.set_current_file_content_text(String::from("Error when matching file types!").into())
         }
+
+        set_current_color(app_ref);
+
+
 }
 
 fn clear_app_ui(app_ref : &App) {
@@ -158,6 +193,8 @@ fn mark_move(path_vec: Ref<Vec<Result<DirEntry, Error>>>,mark_move: &mut Rc<RefC
         }
         
     }
+
+    set_current_color(app_ref);
 }
 
 fn move_to_folder(mark_f_ref: Ref<Vec<i32>>, pv_copy: Ref<Vec<Result<DirEntry, Error>>>, folder_path: Ref<String>) {
@@ -297,6 +334,8 @@ fn main() -> Result<(), slint::PlatformError> {
 
                 app.set_marked_deletion_list(string.into());
             }
+
+            set_current_color(&app);
         }
     });
 
@@ -459,9 +498,7 @@ fn main() -> Result<(), slint::PlatformError> {
         let pv_copy = paths_vec.clone();
         let mut mark_move_copy = marked_move_arr[0].clone();
 
-        move || {
-            mark_move(pv_copy.borrow(), mark_move_copy.borrow_mut(), fi_copy.borrow(), 0, &app)
-        }
+        move || { mark_move(pv_copy.borrow(), mark_move_copy.borrow_mut(), fi_copy.borrow(), 0, &app)  }
     });
 
     app.on_mark_move_f2({
@@ -470,11 +507,98 @@ fn main() -> Result<(), slint::PlatformError> {
         let pv_copy = paths_vec.clone();
         let mut mark_move_copy = marked_move_arr[1].clone();
 
-        move || {
-            mark_move(pv_copy.borrow(), mark_move_copy.borrow_mut(), fi_copy.borrow(), 1, &app)
-        }
+        move || { mark_move(pv_copy.borrow(), mark_move_copy.borrow_mut(), fi_copy.borrow(), 1, &app) }
+    });
+
+    app.on_mark_move_f3({
+        let app : App = weak.upgrade().unwrap();
+        let fi_copy = file_index.clone();
+        let pv_copy = paths_vec.clone();
+        let mut mark_move_copy = marked_move_arr[2].clone();
+
+        move || { mark_move(pv_copy.borrow(), mark_move_copy.borrow_mut(), fi_copy.borrow(), 2, &app) }
     });
     
+    app.on_mark_move_f4({
+        let app : App = weak.upgrade().unwrap();
+        let fi_copy = file_index.clone();
+        let pv_copy = paths_vec.clone();
+        let mut mark_move_copy = marked_move_arr[3].clone();
+
+        move || { mark_move(pv_copy.borrow(), mark_move_copy.borrow_mut(), fi_copy.borrow(), 3, &app) }
+    });
+
+    app.on_mark_move_f5({
+        let app : App = weak.upgrade().unwrap();
+        let fi_copy = file_index.clone();
+        let pv_copy = paths_vec.clone();
+        let mut mark_move_copy = marked_move_arr[4].clone();
+
+        move || { mark_move(pv_copy.borrow(), mark_move_copy.borrow_mut(), fi_copy.borrow(), 4, &app) }
+    });
+
+    app.on_mark_move_f6({
+        let app : App = weak.upgrade().unwrap();
+        let fi_copy = file_index.clone();
+        let pv_copy = paths_vec.clone();
+        let mut mark_move_copy = marked_move_arr[5].clone();
+
+        move || { mark_move(pv_copy.borrow(), mark_move_copy.borrow_mut(), fi_copy.borrow(), 5, &app) }
+    });
+
+    app.on_mark_move_f7({
+        let app : App = weak.upgrade().unwrap();
+        let fi_copy = file_index.clone();
+        let pv_copy = paths_vec.clone();
+        let mut mark_move_copy = marked_move_arr[6].clone();
+
+        move || { mark_move(pv_copy.borrow(), mark_move_copy.borrow_mut(), fi_copy.borrow(), 6, &app) }
+    });
     
+    app.on_mark_move_f8({
+        let app : App = weak.upgrade().unwrap();
+        let fi_copy = file_index.clone();
+        let pv_copy = paths_vec.clone();
+        let mut mark_move_copy = marked_move_arr[7].clone();
+
+        move || { mark_move(pv_copy.borrow(), mark_move_copy.borrow_mut(), fi_copy.borrow(), 7, &app) }
+    });
+
+    app.on_mark_move_f9({
+        let app : App = weak.upgrade().unwrap();
+        let fi_copy = file_index.clone();
+        let pv_copy = paths_vec.clone();
+        let mut mark_move_copy = marked_move_arr[8].clone();
+
+        move || { mark_move(pv_copy.borrow(), mark_move_copy.borrow_mut(), fi_copy.borrow(), 8, &app) }
+    });
+
+    app.on_mark_move_f10({
+        let app : App = weak.upgrade().unwrap();
+        let fi_copy = file_index.clone();
+        let pv_copy = paths_vec.clone();
+        let mut mark_move_copy = marked_move_arr[9].clone();
+
+        move || { mark_move(pv_copy.borrow(), mark_move_copy.borrow_mut(), fi_copy.borrow(), 9, &app) }
+    });
+
+    app.on_mark_move_f11({
+        let app : App = weak.upgrade().unwrap();
+        let fi_copy = file_index.clone();
+        let pv_copy = paths_vec.clone();
+        let mut mark_move_copy = marked_move_arr[10].clone();
+
+        move || { mark_move(pv_copy.borrow(), mark_move_copy.borrow_mut(), fi_copy.borrow(), 10, &app) }
+    });
+
+    app.on_mark_move_f12({
+        let app : App = weak.upgrade().unwrap();
+        let fi_copy = file_index.clone();
+        let pv_copy = paths_vec.clone();
+        let mut mark_move_copy = marked_move_arr[11].clone();
+
+        move || { mark_move(pv_copy.borrow(), mark_move_copy.borrow_mut(), fi_copy.borrow(), 11, &app) }
+    });
+
     app.run()
 }
